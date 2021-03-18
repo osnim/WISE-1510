@@ -515,7 +515,7 @@ unsigned char node_get_sensor_data (char *data)
     len++;
     #endif
     
-    #if ((!NODE_SENSOR_TEMP_HUM_ENABLE)&&(!NODE_SENSOR_CO2_VOC_ENABLE)&&(!))
+    #if ((!NODE_SENSOR_TEMP_HUM_ENABLE)&&(!NODE_SENSOR_CO2_VOC_ENABLE)&&(!NODE_GPIO_ENABLE))
     return 0;
     #else
     //header
