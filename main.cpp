@@ -15,8 +15,8 @@
 #define WISE_VERSION                  "1510S10MMV0106"
 #define NODE_AUTOGEN_APPKEY
 
-#define NODE_SENSOR_TEMP_HUM_ENABLE    0    ///< Enable or disable TEMP/HUM sensor report, default disable
-#define NODE_SENSOR_CO2_VOC_ENABLE     1   ///< Enable or disable CO2/VOC sensor report, default disable
+#define NODE_SENSOR_TEMP_HUM_ENABLE    1    ///< Enable or disable TEMP/HUM sensor report, default disable
+#define NODE_SENSOR_CO2_VOC_ENABLE     0   ///< Enable or disable CO2/VOC sensor report, default disable
 
 #define NODE_DEBUG(x,args...) node_printf_to_serial(x,##args)
 
@@ -43,8 +43,10 @@ RawSerial debug_serial(PA_9, PA_10);	///< Debug serial port
 
 #if NODE_GPIO_ENABLE
 ///< Control downlink GPIO1
-static DigitalOut led(PC_8);//IO01
+static DigitalOut led0 (PA_8);
+static DigitalOut led1(PC_8);//IO01
 static unsigned int gpio0;
+static unsigned int gpio1;
 #else
 DigitalIn gp6(PC_8); ///PC8 consumes power if not declare
 #endif
@@ -505,9 +507,15 @@ unsigned char node_get_sensor_data (char *data)
     len++; // len:1 bytes
     sensor_data[len+2]=gpio0;
     len++;
+    sensor_data[len+2]=0x6;
+    len++;  // GPIO
+    sensor_data[len+2]=0x1;
+    len++; // len:1 bytes
+    sensor_data[len+2]=gpio1;
+    len++;
     #endif
     
-    #if ((!NODE_SENSOR_TEMP_HUM_ENABLE)&&(!NODE_SENSOR_CO2_VOC_ENABLE)&&(!NODE_GPIO_ENABLE))
+    #if ((!NODE_SENSOR_TEMP_HUM_ENABLE)&&(!NODE_SENSOR_CO2_VOC_ENABLE)&&(!))
     return 0;
     #else
     //header
@@ -686,12 +694,23 @@ void node_state_loop()
                     if(node_rx_done_data.data_port==5 && node_rx_done_data.data_len==1)
                     {
                         if (node_rx_done_data.data[0] == '1') {
-                            led=1;
+                            led0=1;
                             gpio0=1; 
                         }
                         else {
-                            led=0;
+                            led0=0;
                             gpio0=0;
+                        }
+                    }
+		  if(node_rx_done_data.data_port==6 && node_rx_done_data.data_len==1)
+                    {
+                        if (node_rx_done_data.data[0] == '1') {
+                            led1=1;
+                            gpio1=1; 
+                        }
+                        else {
+                            led1=0;
+                            gpio1=0;
                         }
                     }
                     #endif // NODE_GPIO_ENABLE
