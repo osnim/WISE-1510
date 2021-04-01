@@ -43,7 +43,7 @@ RawSerial debug_serial(PA_9, PA_10);	///< Debug serial port
 
 #if NODE_GPIO_ENABLE
 ///< Control downlink GPIO1
-static DigitalOut led0 (PA_8);
+static AnalogOut led0 (PA_8);
 static DigitalOut led1(PC_8);//IO01
 static unsigned int gpio0;
 static unsigned int gpio1;
