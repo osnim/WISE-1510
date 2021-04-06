@@ -28,6 +28,10 @@
 #define NODE_M2_COM_UART 0    ///< Declare M2 COM UART for easy debug
 #define NODE_WISE_1510E MBED_CONF_TARGET_LSE_AVAILABLE
 
+#define SENSOR1_IO_PIN	gpio0
+#define SENSOR2_IO_PIN	gpio1
+
+
 #if NODE_DEEP_SLEEP_MODE_SUPPORT
 #define NODE_GPIO_ENABLE               0   ///< Disable GPIO report for deep sleep 
 static DigitalOut *p_lpin;
